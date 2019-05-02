@@ -1,4 +1,5 @@
 import logging
+import configparser
 from miniboa import TelnetServer
 from plugins import callsign as call
 
@@ -6,7 +7,17 @@ IDLE_TIMEOUT = 300
 CLIENT_LIST = []
 SERVER_RUN = True
 
-nodecall = 'WB5OD'
+config = configparser.RawConfigParser()
+
+config.read('conf.txt')
+NODE_CALLSIGN = config.get('MAIN', 'NODE_CALLSIGN')
+
+if NODE_CALLSIGN == 'CHANGEME':
+    print('ERROR: Change the callsign')
+    input('To continue anyway press enter -- DEV USE ONLY')
+    pass
+
+
 menu_data = [['\n(1) Call "wb5od"', '(2) Weather "Zip"', '(3) Tweet "to" "message"'], ['\n(4) Development', '(5) Random thing', '(6) Getting tired'],
                 ['\n(7) Testing', '(8) Sysop Menu', '(9) List Users']]
 
@@ -24,7 +35,7 @@ def on_connect(client):
     logging.info("Opened connection to {}".format(client.addrport()))
     #broadcast("{} joins the conversation.\n".format(client.addrport()))
     CLIENT_LIST.append(client)
-    client.send("\r\nWelcome to the " + nodecall + " python telnet server for ham radio packet.\n")
+    client.send("\r\nWelcome to the " + NODE_CALLSIGN + " python telnet server for ham radio packet.\n")
 
     col_width = max(len(word) for row in menu_data for word in row) + 2  # padding
     for row in menu_data:
