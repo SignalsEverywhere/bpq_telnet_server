@@ -11,6 +11,7 @@ config = configparser.RawConfigParser()
 
 config.read('conf.txt')
 NODE_CALLSIGN = config.get('MAIN', 'NODE_CALLSIGN')
+NODE_TCP_PORT = config.getint('MAIN', 'NODE_TCP_PORT')
 
 if NODE_CALLSIGN == 'CHANGEME':
     print('ERROR: Change the callsign')
@@ -130,7 +131,7 @@ if __name__ == '__main__':
     # and one to call with lost connections.
 
     telnet_server = TelnetServer(
-        port=4444,
+        port=NODE_TCP_PORT,
         address='',
         on_connect=on_connect,
         on_disconnect=on_disconnect,
